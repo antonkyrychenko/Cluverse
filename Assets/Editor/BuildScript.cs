@@ -1,29 +1,41 @@
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
 
 public static class BuildScript
 {
-  // This method is called by Codemagic to build iOS
-  public static void BuildIos()
-  {
-    // Path to output Xcode project
-    string path = "ios";
-
-    // Get all enabled scenes
-    string[] scenes = EditorBuildSettings.scenes
-        .Where(s => s.enabled)
-        .Select(s => s.path)
-        .ToArray();
-
-    // Build iOS Xcode project
-    BuildPlayerOptions options = new BuildPlayerOptions
+    public static void BuildIos()
     {
-      scenes = scenes,
-      locationPathName = path,
-      target = BuildTarget.iOS,
-      options = BuildOptions.None
-    };
+        // Force iOS target (important for CI)
+        EditorUserBuildSettings.SwitchActiveBuildTarget(
+            BuildTargetGroup.iOS,
+            BuildTarget.iOS
+        );
 
-    BuildPipeline.BuildPlayer(options);
-  }
+        string path = "ios";
+
+        string[] scenes = EditorBuildSettings.scenes
+            .Where(s => s.enabled)
+            .Select(s => s.path)
+            .ToArray();
+
+        BuildPlayerOptions options = new BuildPlayerOptions
+        {
+            scenes = scenes,
+            locationPathName = path,
+            target = BuildTarget.iOS,
+            options = BuildOptions.None
+        };
+
+        BuildReport report = BuildPipeline.BuildPlayer(options);
+
+        if (report.summary.result != BuildResult.Succeeded)
+        {
+            throw new System.Exception(
+                $"iOS build failed: {report.summary.result}"
+            );
+        }
+
+        UnityEngine.Debug.Log("✅ iOS Xcode project generated at /ios");
+    }
 }

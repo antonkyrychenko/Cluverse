@@ -10,34 +10,45 @@ workflows:
         BUNDLE_ID: com.kyrychenko.cluverse  # Your app bundle ID
 
     scripts:
-
       - name: Activate Unity Personal
         script: |
+          set -e
           echo "Activating Unity Personal..."
-          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
-            -username ${UNITY_EMAIL} \
-            -password ${UNITY_PASSWORD} \
+          $UNITY_HOME/Contents/MacOS/Unity \
+            -batchmode -quit \
+            -username "$UNITY_EMAIL" \
+            -password "$UNITY_PASSWORD" \
             -serial "" \
-            -logFile ./unity_activation.log
+            -logFile unity_activation.log
           echo "Unity activated"
 
       - name: Generate Xcode project with Unity
         script: |
-          echo "Exporting Xcode project..."
-          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
+          set -e
+          echo "Generating Xcode project..."
+          $UNITY_HOME/Contents/MacOS/Unity \
+            -batchmode -quit \
             -projectPath . \
             -executeMethod BuildScript.BuildIos \
-            -logFile ./unity_build.log \
+            -logFile unity_build.log \
             -nographics
           echo "Xcode project generated"
 
+          echo "Contents of ios directory:"
+          ls -la ios
+
       - name: Build .ipa for TestFlight
         script: |
-          echo "Building .ipa..."
+          set triggered
+          echo "Building IPA..."
           xcode-project build-ipa \
             --project ios/Unity-iPhone.xcodeproj \
-            --scheme Unity-iPhone
+            --scheme Unity-iPhone \
+            --archive-directory build/ios/archive \
+            --ipa-directory build/ios/ipa
           echo "IPA build complete"
 
     artifacts:
       - build/ios/ipa/*.ipa
+      - unity_build.log
+      - unity_activation.log
