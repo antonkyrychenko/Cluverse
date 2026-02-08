@@ -3,20 +3,30 @@ workflows:
     name: Unity iOS Personal Build
     instance_type: mac_mini_m2
     environment:
-      unity: "2022.3.62f2"   # 👈 specify your Unity editor version here
+      unity: "2022.3.62f2"  # Supported LTS version
       vars:
         BUNDLE_ID: com.kyrychenko.cluverse
     scripts:
+      - name: Install Unity (Personal)
+        script: |
+          # Install Unity version via Codemagic CLI
+          echo "Installing Unity 2022.3.62f2..."
+          unity-install --version 2022.3.62f2 --modules ios
+
       - name: Generate Xcode project with Unity
         script: |
+          # Use $UNITY_HOME set by unity-install
           $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
             -projectPath . \
             -executeMethod BuildScript.BuildIos \
-            -logFile -nographics
+            -logFile ./unity_build.log \
+            -nographics
+
       - name: Build .ipa for TestFlight
         script: |
           xcode-project build-ipa \
             --project ios/Unity-iPhone.xcodeproj \
             --scheme Unity-iPhone
+
     artifacts:
       - build/ios/ipa/*.ipa
