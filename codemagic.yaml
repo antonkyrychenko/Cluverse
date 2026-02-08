@@ -1,0 +1,28 @@
+workflows:
+  ios-workflow:
+    name: Unity iOS Personal Build
+    instance_type: mac_mini_m2
+    environment:
+      vars:
+        UNITY_USERNAME: anton.kyrychenko11@gmail.com
+        UNITY_PASSWORD: YBHo5z0D*&**AHMg
+        BUNDLE_ID: com.kyrychenko.cluverse
+    scripts:
+      - name: Activate Unity (Personal)
+        script: |
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
+            -projectPath . \
+            -username ${UNITY_USERNAME?} \
+            -password ${UNITY_PASSWORD?} \
+            -logFile
+      - name: Build Xcode Project
+        script: |
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
+            -projectPath . \
+            -executeMethod BuildScript.BuildIos \
+            -logFile -nographics
+      - name: Build .ipa for TestFlight
+        script: |
+          xcode-project build-ipa --project ios/Unity-iPhone.xcodeproj --scheme Unity-iPhone
+    artifacts:
+      - build/ios/ipa/*.ipa
