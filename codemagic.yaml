@@ -3,18 +3,33 @@ workflows:
     name: Unity iOS Personal Build
     instance_type: mac_mini_m2
     environment:
-      unity: "2022.3.62f2"
+      unity: "2022.3.62f2"        # Supported LTS version
       vars:
-        BUNDLE_ID: com.kyrychenko.cluverse
+        UNITY_EMAIL: anton.kyrychenko11@gmail.com   # Your Unity account email
+        UNITY_PASSWORD: YBHo5z0D*&**AHMg         # Your Unity account password
+        BUNDLE_ID: com.kyrychenko.cluverse  # Your app bundle ID
+
     scripts:
+
+      - name: Activate Unity Personal
+        script: |
+          echo "Activating Unity Personal..."
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
+            -username ${UNITY_EMAIL} \
+            -password ${UNITY_PASSWORD} \
+            -serial "" \
+            -logFile ./unity_activation.log
+          echo "Unity activated"
+
       - name: Generate Xcode project with Unity
         script: |
-          echo "Building Unity Xcode project..."
-          unity -batchmode -quit \
+          echo "Exporting Xcode project..."
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
             -projectPath . \
             -executeMethod BuildScript.BuildIos \
             -logFile ./unity_build.log \
             -nographics
+          echo "Xcode project generated"
 
       - name: Build .ipa for TestFlight
         script: |
@@ -22,6 +37,7 @@ workflows:
           xcode-project build-ipa \
             --project ios/Unity-iPhone.xcodeproj \
             --scheme Unity-iPhone
+          echo "IPA build complete"
 
     artifacts:
       - build/ios/ipa/*.ipa
