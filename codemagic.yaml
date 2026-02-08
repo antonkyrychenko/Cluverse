@@ -4,13 +4,11 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       vars:
-        UNITY_USERNAME: anton.kyrychenko11@gmail.com
-        UNITY_PASSWORD: YBHo5z0D*&**AHMg
-        BUNDLE_ID: com.kyrychenko.cluverse
+        BUNDLE_ID: com.sashagames.blastblock
     scripts:
       - name: Build Xcode Project
         script: |
-          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
+          unity -batchmode -quit \
             -projectPath . \
             -executeMethod BuildScript.BuildIos \
             -logFile -nographics
