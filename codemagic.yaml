@@ -3,17 +3,20 @@ workflows:
     name: Unity iOS Personal Build
     instance_type: mac_mini_m2
     environment:
+      unity: "2022.3.50f1"   # 👈 specify your Unity editor version here
       vars:
-        BUNDLE_ID: com.sashagames.blastblock
+        BUNDLE_ID: com.kyrychenko.cluverse
     scripts:
-      - name: Build Xcode Project
+      - name: Generate Xcode project with Unity
         script: |
-          unity -batchmode -quit \
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
             -projectPath . \
             -executeMethod BuildScript.BuildIos \
             -logFile -nographics
       - name: Build .ipa for TestFlight
         script: |
-          xcode-project build-ipa --project ios/Unity-iPhone.xcodeproj --scheme Unity-iPhone
+          xcode-project build-ipa \
+            --project ios/Unity-iPhone.xcodeproj \
+            --scheme Unity-iPhone
     artifacts:
       - build/ios/ipa/*.ipa
