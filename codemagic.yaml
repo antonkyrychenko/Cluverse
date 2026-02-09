@@ -29,6 +29,9 @@ workflows:
         script: |
           echo "Exporting Xcode project..."
           $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
+            -username "$UNITY_EMAIL" \
+            -password "$UNITY_PASSWORD" \
+            -serial "" \
             -projectPath "$CM_BUILD_DIR" \
             -executeMethod BuildScript.BuildiOS \
             -logFile "$CM_BUILD_DIR/unity_build.log" \

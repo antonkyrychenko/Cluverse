@@ -1,4 +1,5 @@
 // Assets/Editor/BuildScript.cs
+using System;
 using System.IO;
 using UnityEditor;
 
@@ -6,11 +7,11 @@ public class BuildScript
 {
   public static void BuildiOS()
   {
-    UnityEngine.Debug.Log("BuildiOS method started");
+    Console.WriteLine("BuildiOS method started");
     string buildPath = Path.Combine(System.Environment.CurrentDirectory, "ios");
     if (!Directory.Exists(buildPath))
     {
-      UnityEngine.Debug.Log("Build directory doesn't exist. Creating new one");
+      Console.WriteLine("Build directory doesn't exist. Creating new one");
       Directory.CreateDirectory(buildPath);
     }
 
@@ -21,12 +22,12 @@ public class BuildScript
         BuildOptions.None
     );
 
-    UnityEngine.Debug.Log("Xcode project generated at: " + buildPath);
+    Console.WriteLine("Xcode project generated at: " + buildPath);
     foreach (var file in Directory.GetFiles(buildPath, "*", SearchOption.AllDirectories))
     {
-      UnityEngine.Debug.Log(file);
+      Console.WriteLine(file);
     }
 
-    UnityEngine.Debug.Log("BuildPipeline.BuildPlayer completed");
+    Console.WriteLine("BuildPipeline.BuildPlayer completed");
   }
 }
