@@ -19,7 +19,7 @@ workflows:
       # Activate Unity
       - name: Activate Unity license
         script: |
-          unity-editor \
+          /Applications/Unity/Hub/Editor/$UNITY_VERSION/Unity.app/Contents/MacOS/Unity \
             -batchmode \
             -nographics \
             -quit \
@@ -29,7 +29,7 @@ workflows:
       # Build iOS project from Unity
       - name: Build Unity iOS project
         script: |
-          unity-editor \
+          /Applications/Unity/Hub/Editor/$UNITY_VERSION/Unity.app/Contents/MacOS/Unity \
             -batchmode \
             -nographics \
             -quit \
