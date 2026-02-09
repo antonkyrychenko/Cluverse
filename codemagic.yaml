@@ -40,7 +40,7 @@ workflows:
           echo "Building IPA..."
           cd "$CM_BUILD_DIR"
           xcode-project build-ipa \
-            --project "$UNITY_IOS_DIR/$XCODE_PROJECT" \
+            --project "$UNITY_IOS_DIR/Unity-iPhone.xcodeproj" \
             --scheme "$XCODE_SCHEME" \
             --export-options-plist "$CM_BUILD_DIR/ExportOptions.plist"
           echo "IPA build complete"
