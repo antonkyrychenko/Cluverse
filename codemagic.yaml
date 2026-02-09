@@ -6,8 +6,7 @@ workflows:
 
     environment:
       groups:
-        - appstore_credentials   # App Store Connect API key
-        - unity_credentials      # UNITY_EMAIL, UNITY_PASSWORD
+        - cluverse   #all settings
       vars:
         UNITY_VERSION: 2022.3.62f2
         XCODE_WORKSPACE: "ios/Unity-iPhone.xcworkspace"
