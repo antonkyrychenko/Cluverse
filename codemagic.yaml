@@ -18,11 +18,11 @@ workflows:
       - name: Activate Unity license
         script: |
           echo "$UNITY_LICENSE" > unity.ulf
-          /Applications/Unity/Hub/Editor/$UNITY_VERSION/Unity.app/Contents/MacOS/Unity \
-            -batchmode \
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
             -nographics \
             -manualLicenseFile unity.ulf \
-            -quit
+            -logFile "$CM_BUILD_DIR/unity_activation.log"
+          cat "$CM_BUILD_DIR/unity_activation.log"
           echo "Unity activation finished"
 
       - name: Generate Xcode project with Unity
