@@ -30,7 +30,7 @@ workflows:
           echo "Exporting Xcode project..."
           $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
             -projectPath "$CM_BUILD_DIR" \
-            -executeMethod BuildScript.BuildIos \
+            -executeMethod BuildScript.BuildiOS \
             -logFile "$CM_BUILD_DIR/unity_build.log" \
             -nographics
           echo "Xcode project generated"
