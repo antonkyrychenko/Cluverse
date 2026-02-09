@@ -38,6 +38,8 @@ workflows:
       - name: Build IPA for TestFlight / App Store
         script: |
           echo "Building IPA..."
+          echo "UNITY_IOS_DIR='$UNITY_IOS_DIR'"
+          ls -la "$UNITY_IOS_DIR"
           cd "$CM_BUILD_DIR"
           xcode-project build-ipa \
             --project "$UNITY_IOS_DIR/Unity-iPhone.xcodeproj" \
