@@ -38,11 +38,10 @@ workflows:
       - name: Build .ipa for TestFlight / App Store
         script: |
           xcodebuild \
-            -workspace "$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
+            -project ios/Unity-iPhone.xcodeproj \
+            -scheme Unity-iPhone \
             -configuration Release \
             -archivePath build/UnityApp.xcarchive \
-            archive \
             DEVELOPMENT_TEAM=$DEVELOPMENT_TEAM_ID \
             PRODUCT_BUNDLE_IDENTIFIER=$BUNDLE_ID
 
