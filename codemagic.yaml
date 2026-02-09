@@ -4,9 +4,9 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       unity: "2022.3.62f2"        # Unity LTS version
+      groups:
+        - cluverse
       vars:
-        UNITY_EMAIL: anton.kyrychenko11@gmail.com
-        UNITY_PASSWORD: YBHo5z0D*&**AHMg
         BUNDLE_ID: com.kyrychenko.cluverse
         DEVELOPMENT_TEAM_ID: N3TZR6KJCB
         XCODE_WORKSPACE: ios/Unity-iPhone.xcworkspace
@@ -15,31 +15,25 @@ workflows:
 
     scripts:
 
-      - name: Activate Unity Personal
+      - name: Activate Unity license
         script: |
-          echo "Activating Unity Personal..."
-          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
-            -username "$UNITY_EMAIL" \
-            -password "$UNITY_PASSWORD" \
-            -logFile "$CM_BUILD_DIR/unity_activation.log"
-          cat "$CM_BUILD_DIR/unity_activation.log"
-          echo "Unity activated"
+          echo "$UNITY_LICENSE" > unity.ulf
+          /Applications/Unity/Hub/Editor/$UNITY_VERSION/Unity.app/Contents/MacOS/Unity \
+            -batchmode \
+            -nographics \
+            -manualLicenseFile unity.ulf \
+            -quit
+          echo "Unity activation finished"
 
       - name: Generate Xcode project with Unity
         script: |
           echo "Exporting Xcode project..."
-          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
-            -username "$UNITY_EMAIL" \
-            -password "$UNITY_PASSWORD" \
-            -logFile "$CM_BUILD_DIR/unity_activation.log"
-          cat "$CM_BUILD_DIR/unity_activation.log"
           $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
             -projectPath "$CM_BUILD_DIR" \
             -executeMethod BuildScript.BuildiOS \
             -logFile "$CM_BUILD_DIR/unity_build.log" \
             -nographics
           cat "$CM_BUILD_DIR/unity_build.log"
-          echo "Xcode project generated"
 
       - name: Build IPA for TestFlight / App Store
         script: |
