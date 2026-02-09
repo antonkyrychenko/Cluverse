@@ -33,8 +33,6 @@ workflows:
             -logFile "$CM_BUILD_DIR/unity_activation.log"
           cat "$CM_BUILD_DIR/unity_activation.log"
           $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
-            -username "$UNITY_EMAIL" \
-            -password "$UNITY_PASSWORD" \
             -projectPath "$CM_BUILD_DIR" \
             -executeMethod BuildScript.BuildiOS \
             -logFile "$CM_BUILD_DIR/unity_build.log" \
