@@ -33,6 +33,7 @@ workflows:
             -executeMethod BuildScript.BuildiOS \
             -logFile "$CM_BUILD_DIR/unity_build.log" \
             -nographics
+          cat "$CM_BUILD_DIR/unity_build.log"
           echo "Xcode project generated"
 
       - name: Build IPA for TestFlight / App Store

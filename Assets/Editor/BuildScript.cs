@@ -6,6 +6,7 @@ public class BuildScript
 {
   public static void BuildiOS()
   {
+    UnityEngine.Debug.Log("BuildiOS method started");
     string buildPath = Path.Combine(System.Environment.CurrentDirectory, "ios");
     if (!Directory.Exists(buildPath))
     {
@@ -25,5 +26,7 @@ public class BuildScript
     {
       UnityEngine.Debug.Log(file);
     }
+
+    UnityEngine.Debug.Log("BuildPipeline.BuildPlayer completed");
   }
 }
