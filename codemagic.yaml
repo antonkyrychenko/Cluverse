@@ -42,7 +42,7 @@ workflows:
           xcode-project build-ipa \
             --project "$UNITY_IOS_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME" \
-            --export-options-plist "$UNITY_IOS_DIR/ExportOptions.plist"
+            --export-options-plist "$CM_BUILD_DIR/ExportOptions.plist"
           echo "IPA build complete"
 
     artifacts:
