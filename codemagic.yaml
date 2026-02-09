@@ -35,11 +35,6 @@ workflows:
             -nographics
           echo "Xcode project generated"
 
-      - name: Install CocoaPods
-        script: |
-          cd ios
-          pod install
-
       - name: Build .ipa for TestFlight / App Store
         script: |
           xcodebuild \
