@@ -41,7 +41,8 @@ workflows:
           cd "$CM_BUILD_DIR"
           xcode-project build-ipa \
             --project "$UNITY_IOS_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+            --scheme "$XCODE_SCHEME" \
+            --distribution app-store
           echo "IPA build complete"
 
     artifacts:
