@@ -1,49 +1,46 @@
 workflows:
-  ios-unity-appstore:
-    name: Unity iOS App Store
-    max_build_duration: 120
-    instance_type: mac_mini_m1
-
+  ios-workflow:
+    name: Unity iOS Personal Build
+    instance_type: mac_mini_m2
     environment:
-      groups:
-        - cluverse   #all settings
+      unity: "2022.3.62f2"        # Unity LTS version
       vars:
-        UNITY_VERSION: 2022.3.62f2
-        XCODE_WORKSPACE: "ios/Unity-iPhone.xcworkspace"
-        XCODE_SCHEME: "Unity-iPhone"
-        BUNDLE_ID: "com.kyrychenko.cluverse"
-      xcode: latest
+        UNITY_EMAIL: anton.kyrychenko11@gmail.com
+        UNITY_PASSWORD: YBHo5z0D*&**AHMg
+        BUNDLE_ID: com.kyrychenko.cluverse
+        DEVELOPMENT_TEAM_ID: N3TZR6KJCB
+        XCODE_WORKSPACE: ios/Unity-iPhone.xcworkspace
+        XCODE_SCHEME: Unity-iPhone
       cocoapods: default
 
     scripts:
-      # Activate Unity
-      - name: Activate Unity license
+
+      - name: Activate Unity Personal
         script: |
-          /Applications/Unity/Hub/Editor/$UNITY_VERSION/Unity.app/Contents/MacOS/Unity \
-            -batchmode \
-            -nographics \
-            -quit \
+          echo "Activating Unity Personal..."
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
             -username "$UNITY_EMAIL" \
-            -password "$UNITY_PASSWORD"
+            -password "$UNITY_PASSWORD" \
+            -serial "" \
+            -logFile "$CM_BUILD_DIR/unity_activation.log"
+          echo "Unity activated"
 
-      # Build iOS project from Unity
-      - name: Build Unity iOS project
+      - name: Generate Xcode project with Unity
         script: |
-          /Applications/Unity/Hub/Editor/$UNITY_VERSION/Unity.app/Contents/MacOS/Unity \
-            -batchmode \
-            -nographics \
-            -quit \
-            -projectPath . \
-            -executeMethod BuildScript.BuildiOS
+          echo "Exporting Xcode project..."
+          $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit \
+            -projectPath "$CM_BUILD_DIR" \
+            -executeMethod BuildScript.BuildIos \
+            -logFile "$CM_BUILD_DIR/unity_build.log" \
+            -nographics
+          echo "Xcode project generated"
 
-      # Install pods (Unity IAP, Ads, etc)
       - name: Install CocoaPods
         script: |
           cd ios
           pod install
 
-      # Build and sign IPA
-      - name: Build IPA
+      - name: Build .ipa for TestFlight / App Store
         script: |
           xcodebuild \
             -workspace "$XCODE_WORKSPACE" \
@@ -63,4 +60,3 @@ workflows:
     artifacts:
       - build/ipa/*.ipa
       - build/UnityApp.xcarchive
-      - ios/build/**
